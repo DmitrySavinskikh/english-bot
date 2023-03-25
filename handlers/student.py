@@ -6,7 +6,8 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from aiogram.dispatcher.storage import FSMContext
 from data_base import sqlite_db
 from aiogram.dispatcher.filters import Text
-    
+
+# now i create new commit 
 
 async def start_mode_student(message: types.Message):
     await message.reply('Ты вошёл в режим обучения, для выхода введи "/start"', reply_markup=student_kb)
