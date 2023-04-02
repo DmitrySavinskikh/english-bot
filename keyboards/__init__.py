@@ -1,2 +1,3 @@
 from keyboards.kb_client import client_kb
 from keyboards.kb_student import student_kb
+from keyboards.kb_student_eng_rus import student_eng_rus_kb
