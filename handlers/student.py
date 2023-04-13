@@ -47,7 +47,6 @@ async def get_word_ruen(message: types.Message, state: FSMContext):
             return
 
         async with state.proxy() as data:
-            # print(message_user, data['expected'])
             if message_user.lower() == 'знаю':
                 repeats = await sqlite_db.minus_one_repeat(message.from_user.id, enword)
                 if repeats == 0:
@@ -60,6 +59,7 @@ async def get_word_ruen(message: types.Message, state: FSMContext):
                         await bot.send_message(message.from_user.id, f'Описание: {description}')
             elif message_user.lower() == 'не знаю':
                 await bot.send_message(message.from_user.id, 'Окей, ошибки - наши лучшие друзья ;)')
+                await bot.send_message(message.from_user.id, enword)
             else:
                 await bot.send_message(message.from_user.id, "Введи 'знаю' или 'не знаю'")
             expected = await send_random_ruword(message)
