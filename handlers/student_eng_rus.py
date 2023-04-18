@@ -38,7 +38,7 @@ async def learn_en_ru_word(message: types.Message, state: FSMContext):
 async def get_word_enru(message: types.Message, state: FSMContext):
     if await sqlite_db.if_not_empty(message.from_user.id):
         message_user = message.text
-        if message_user == 'выйти':
+        if message_user.lower() == 'выйти':
             await bot.send_message(message.from_user.id, 'OK')
             await state.finish()
             return
@@ -52,13 +52,15 @@ async def get_word_enru(message: types.Message, state: FSMContext):
                     await sqlite_db.sql_delete_row(state)
                 else:
                     await bot.send_message(message.from_user.id, f'До выучивания осталось {repeats} повторений')
+                    await bot.send_message(message.from_user.id, ruword)
                     stop_symbols = ['-', '_', 'без описания']
                     if description.lower() not in stop_symbols:
                         await bot.send_message(message.from_user.id, f'Описание: {description}')
             elif message_user.lower() == '/не_знаю':
                 await bot.send_message(message.from_user.id, 'Окей, ошибки - наши лучшие друзья ;)')
+                await bot.send_message(message.from_user.id, ruword)
             else:
-                await bot.send_message(message.from_user.id, "Следуй по кнопкам снизу")
+                await bot.send_message(message.from_user.id, "Следуй по кнопкам снизу или напиши 'выйти', если хочешь сделать это")
             expected = await send_random_enword(message)
             data['expected'] = expected
 

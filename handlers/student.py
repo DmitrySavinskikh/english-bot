@@ -54,6 +54,7 @@ async def get_word_ruen(message: types.Message, state: FSMContext):
                     await sqlite_db.sql_delete_row(state)
                 else:
                     await bot.send_message(message.from_user.id, f'До выучивания осталось {repeats} повторений')
+                    await bot.send_message(message.from_user.id, enword)
                     stop_symbols = ['-', '_', 'без описания']
                     if description.lower() not in stop_symbols:
                         await bot.send_message(message.from_user.id, f'Описание: {description}')
