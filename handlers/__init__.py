@@ -1,1 +1,1 @@
-from handlers import client, student, student_eng_rus
+from handlers import client, student, student_eng_rus, student_rus_eng

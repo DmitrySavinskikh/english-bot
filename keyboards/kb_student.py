@@ -3,7 +3,7 @@ from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 b0 = KeyboardButton('/Учить')
 b1 = KeyboardButton('/Мой_словарь')
-b2 = KeyboardButton('/рус_англ')
+b2 = KeyboardButton('/ру_ен')
 b3 = KeyboardButton('/ен_ру')
 
 student_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)

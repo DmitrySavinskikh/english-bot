@@ -5,6 +5,7 @@ from create_bot import dp, bot
 from keyboards import client_kb
 from aiogram.dispatcher.storage import FSMContext
 from data_base.sqlite_db import sql_add_command, sql_delete_row
+from data_base import sqlite_db
 import random
 
 
@@ -60,27 +61,15 @@ async def add_enword(message: types.Message, state: FSMContext):
     await sql_add_command(state)
     await state.finish()
 
-# async def add_ruword(state: FSMContext):
-#     async with state.proxy() as data:
-#         data['ruword'] = words[1]
-#     await FSMClient.next()
-
-# async def add_discribe(state: FSMContext):
-#     global id_word
-#     async with state.proxy() as data:
-#         data['description'] = words[2]
-#         data['id_word'] = str(id_word)
-#         id_word += 1
-#     await sql_add_command(state)
-#     await state.finish()
-#     await bot.send_message('Добавилось')
-
 class FSMClientDel(StatesGroup):
     enword_del = State()
 
 async def start_del_word(message: types.Message):
-    await FSMClientDel.enword_del.set()
-    await message.reply('Введи слово на английском, чтобы удалить его')
+    if await sqlite_db.if_not_empty(message.from_user.id):
+        await FSMClientDel.enword_del.set()
+        await message.reply('Введи слово на английском, чтобы удалить его')
+    else:
+        await bot.send_message(message.from_user.id, 'Словарь пуст')
 
 async def finish_del_word(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
@@ -96,7 +85,5 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(cancel_handler, state='*', commands='cancel')
     dp.register_message_handler(cancel_handler, Text(equals='отмена', ignore_case=True), state='*')
     dp.register_message_handler(add_enword, state=FSMClient.en_word)
-    # dp.register_message_handler(add_ruword, state=FSMClient.ru_word)
-    # dp.register_message_handler(add_discribe, state=FSMClient.discribe)
     dp.register_message_handler(start_del_word, commands=['Удалить'], state=None)
     dp.register_message_handler(finish_del_word, state=FSMClientDel.enword_del)

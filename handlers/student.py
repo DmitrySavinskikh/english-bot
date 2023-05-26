@@ -12,62 +12,8 @@ async def start_mode_student(message: types.Message):
 
 async def my_dict(message : types.Message):
     if await sqlite_db.if_not_empty(message.from_user.id):
-        await sqlite_db.sql_read(message, message.from_user.id)
-
-class FSMStudent_ruen(StatesGroup):
-    wait_reply = State()
-
-enword = ''
-description = ''
-async def send_random_ruword(message: types.Message):
-    global enword, description
-    if await sqlite_db.if_not_empty(message.from_user.id):
-        set_data = await sqlite_db.sql_take_set(message.from_user.id)
-        # print(set_data)
-        await message.reply(set_data[1])
-        enword = set_data[0]
-        description = set_data[2]
-        return set_data[0]
-
-async def learn_ru_en_word(message: types.Message, state: FSMContext):
-    if await sqlite_db.if_not_empty(message.from_user.id):
-        await FSMStudent_ruen.wait_reply.set()
-        await message.reply("let's go, пиши 'знаю' или 'не знаю'\nPS: если закончил, напиши 'выйти'")
-
-        async with state.proxy() as data:
-            expected = await send_random_ruword(message)
-            data['expected'] = expected
-
-async def get_word_ruen(message: types.Message, state: FSMContext):
-    if await sqlite_db.if_not_empty(message.from_user.id):
-        message_user = message.text
-        if message_user == 'выйти':
-            await bot.send_message(message.from_user.id, 'OK')
-            await state.finish()
-            return
-
-        async with state.proxy() as data:
-            if message_user.lower() == 'знаю':
-                repeats = await sqlite_db.minus_one_repeat(message.from_user.id, enword)
-                if repeats == 0:
-                    await bot.send_message(message.from_user.id, 'Ты выучил это слово!')
-                    await sqlite_db.sql_delete_row(state)
-                else:
-                    await bot.send_message(message.from_user.id, f'До выучивания осталось {repeats} повторений')
-                    await bot.send_message(message.from_user.id, enword)
-                    stop_symbols = ['-', '_', 'без описания']
-                    if description.lower() not in stop_symbols:
-                        await bot.send_message(message.from_user.id, f'Описание: {description}')
-            elif message_user.lower() == 'не знаю':
-                await bot.send_message(message.from_user.id, 'Окей, ошибки - наши лучшие друзья ;)')
-                await bot.send_message(message.from_user.id, enword)
-            else:
-                await bot.send_message(message.from_user.id, "Введи 'знаю' или 'не знаю'")
-            expected = await send_random_ruword(message)
-            data['expected'] = expected
+        await sqlite_db.sql_read_all(message, message.from_user.id)
 
 def register_handlers_student(dp: Dispatcher):
     dp.register_message_handler(start_mode_student, commands=['Учить'])
     dp.register_message_handler(my_dict, commands=['Мой_словарь'])
-    dp.register_message_handler(learn_ru_en_word, commands=['рус_англ'])
-    dp.register_message_handler(get_word_ruen, state=FSMStudent_ruen.wait_reply)
