@@ -12,7 +12,6 @@ import random
 id_word = 0
 
 class FSMClient(StatesGroup):
-    id_user = State()
     id_word = State()
     en_word = State()
     ru_word = State()
@@ -21,11 +20,10 @@ class FSMClient(StatesGroup):
 async def command_start(message: types.Message):
     # print(message.from_user.id)
     await bot.send_message(message.from_user.id, 'Привет, это бот по изучению английского. Следуй ниже по кнопкам', reply_markup=client_kb)
-
-async def cm_start(message: types.Message, state: FSMContext):
+    sqlite_db.sql_start(message.from_user.id)
+    
+async def cm_start(message: types.Message):
     await FSMClient.en_word.set()
-    async with state.proxy() as data:
-        data['id_user'] = str(message.from_user.id)
     await message.reply('Напиши сообщение по следующему образцу:\n<Слово на английском>\n<Перевод>\n<Описание или "-" "_" "Без описания">\nВведи "отмена" если передумал')
 
 async def cancel_handler(message: types.Message, state: FSMContext):
