@@ -1,7 +1,5 @@
 import sqlite3 as sq
 from create_bot import bot
-import random
-# from handlers.client import id_word
 
 
 def check_existence_db(id):
@@ -36,6 +34,7 @@ async def sql_add_command(state):
     async with state.proxy() as data:
         # print(data)
         # enword = tuple(data.values())[1]
+        # print(tuple(data.values()))
         cur.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, 10)', tuple(data.values()))
         base.commit()
     
@@ -50,6 +49,13 @@ async def sql_delete_row(state):
     async with state.proxy() as data:
         cur.execute('DELETE FROM dictionary WHERE en_word = (?)', tuple(data.values()))
         base.commit()
+
+async def sql_del_prev_row():
+    id = cur.execute('SELECT max(id_word) FROM dictionary').fetchone()[0]
+    del_word = cur.execute('SELECT en_word FROM dictionary WHERE id_word = (?)', [id])
+    cur.execute('DELETE FROM dictionary WHERE id_word = (?)', [id])
+    base.commit()
+    return del_word
 
 # пробовал реализовать с подсчётом максимального кол-ва повторений
 async def sql_take_set(id_user):
@@ -72,3 +78,11 @@ async def minus_one_repeat(id_user, enword):
         repeats_after = cur.execute('''SELECT * FROM dictionary WHERE en_word = ?''', [enword]).fetchone()[4]
         base.commit()
         return repeats_after
+
+async def max_id_word():
+    if cur.execute('SELECT COUNT(*) FROM dictionary').fetchone()[0] > 0:
+        id = cur.execute('SELECT max(id_word) FROM dictionary').fetchone()[0]
+        base.commit()
+        return id
+    else:
+        id = 0
