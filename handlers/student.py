@@ -8,11 +8,13 @@ from data_base import sqlite_db
 
 
 async def start_mode_student(message: types.Message):
-    await message.reply('Ты вошёл в режим обучения, для выхода введи "/start"', reply_markup=student_kb)
+    await bot.send_message(message.from_user.id, 'Ты вошёл в режим обучения', reply_markup=student_kb)
 
 async def my_dict(message : types.Message):
     if await sqlite_db.if_not_empty(message.from_user.id):
         await sqlite_db.sql_read_all(message, message.from_user.id)
+    else:
+        await bot.send_message(message.from_user.id, 'Словарь пуст')
 
 def register_handlers_student(dp: Dispatcher):
     dp.register_message_handler(start_mode_student, commands=['Учить'])

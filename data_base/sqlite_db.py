@@ -35,7 +35,7 @@ async def sql_add_command(state):
         # print(data)
         # enword = tuple(data.values())[1]
         # print(tuple(data.values()))
-        cur.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, 10)', tuple(data.values()))
+        cur.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, 100)', tuple(data.values()))
         base.commit()
     
 async def sql_read_all(message, id_user):
@@ -86,3 +86,12 @@ async def max_id_word():
         return id
     else:
         id = 0
+        return id
+
+async def read_word_rus(ruword):
+    list_ = cur.execute('SELECT * FROM dictionary WHERE ru_word = ?', [ruword]).fetchone()
+    return list_[:3]
+
+async def read_word_eng(enword):
+    list_ = cur.execute('SELECT * FROM dictionary WHERE en_word = ?', [enword]).fetchone()
+    return list_[:3]

@@ -1,10 +1,12 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 
-b0 = KeyboardButton('/Знаю')
-b1 = KeyboardButton('/Не_знаю')
+b1 = KeyboardButton('/Знаю')
+b0 = KeyboardButton('/Не_знаю')
+b2 = KeyboardButton('/start')
+b3 = KeyboardButton('/lets_go')
 
 student_rus_eng_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
-student_rus_eng_kb.row(b0, b1)
+student_rus_eng_kb.row(b0, b1).row(b2, b3)
 
