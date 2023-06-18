@@ -19,7 +19,6 @@ async def send_random_enword(message: types.Message):
     if await sqlite_db.if_not_empty(message.from_user.id):
         set_data = await sqlite_db.sql_take_set(message.from_user.id)
         await bot.send_message(message.from_user.id, set_data[0], reply_markup=student_eng_rus_kb)
-        await message.reply(set_data[0])
         ruword = set_data[1]
         enword = set_data[0]
         description = set_data[2]
@@ -55,7 +54,7 @@ async def get_word_enru(message: types.Message, state: FSMContext):
                 else:
                     await bot.send_message(message.from_user.id, f'До выучивания осталось {repeats} повторений')
             elif message_user.lower() == '/не_знаю':
-                list_ = await sqlite_db.read_word_eng(ruword)
+                list_ = await sqlite_db.read_word_eng(enword)
                 await bot.send_message(message.from_user.id, f'{list_[0], list_[1]}\nописание: {list_[2]}')
             else:
                 await bot.send_message(message.from_user.id, "Введи 'знаю' или 'не знаю'")
@@ -67,5 +66,5 @@ async def get_word_enru(message: types.Message, state: FSMContext):
 
 def register_handlers_student(dp: Dispatcher):
     dp.register_message_handler(start_mode_student, commands=['ен_ру'])
-    dp.register_message_handler(learn_en_ru_word, commands=["letsgo"])
+    dp.register_message_handler(learn_en_ru_word, commands=["lets_go"])
     dp.register_message_handler(get_word_enru, state=FSMStudent_enru.wait_reply)
