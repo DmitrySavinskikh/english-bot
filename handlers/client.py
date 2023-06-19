@@ -35,6 +35,6 @@ async def finish_del_word(message: types.Message, state: FSMContext):
 
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(command_start, commands=['start'])
-    dp.register_message_handler(start_del_word, commands=['Удалить'], state=None)
+    dp.register_message_handler(start_del_word, commands=['Режим_удаления'], state=None)
     dp.register_message_handler(cancel_handler, commands=['start'], state='*')
     dp.register_message_handler(finish_del_word, state=FSMClientDel.enword_del)

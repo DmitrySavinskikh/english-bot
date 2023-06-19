@@ -84,7 +84,7 @@ async def del_specific_finish(message: types.Message, state: FSMContext):
 
 
 def register_handlers_client_adding(dp: Dispatcher):
-    dp.register_message_handler(sigh_in, commands=['Добавить'], state=None)
+    dp.register_message_handler(sigh_in, commands=['Режим_добавить'], state=None)
     dp.register_message_handler(cm_start, commands=['Добавить_слово'], state=None)
     dp.register_message_handler(cancel_handler, state='*', commands='cancel')
     dp.register_message_handler(cancel_handler, commands=['Отмена_и_выход'], state='*')
