@@ -65,5 +65,5 @@ async def get_word_ruen(message: types.Message, state: FSMContext):
 
 def register_handlers_student(dp: Dispatcher):
     dp.register_message_handler(start_mode_student, commands=['ру_ен'])
-    dp.register_message_handler(learn_ru_en_word, commands=['lets_go'])
+    dp.register_message_handler(learn_ru_en_word, commands=['letsgo'])
     dp.register_message_handler(get_word_ruen, state=FSMStudent_ruen.wait_reply)
