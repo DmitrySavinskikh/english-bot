@@ -37,8 +37,10 @@ async def sql_add_command(state):
     
 async def sql_read_all(message, id_user):
     if await if_not_empty(id_user):
+        dict_message = ''
         for ret in cur.execute('SELECT * FROM dictionary').fetchall():
-            await bot.send_message(message.from_user.id, f'{ret[0], ret[1]}\nописание: {ret[2]}')
+            dict_message = dict_message + f'{ret[0]}, {ret[1]}, описание: {ret[3]};\n\n'
+        await bot.send_message(message.from_user.id, dict_message)
     else:
         await bot.send_message(message.from_user.id, 'Словарь пуст, нажми /start и добавь новые слова')
 
