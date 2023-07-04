@@ -4,3 +4,4 @@ from keyboards.kb_student_eng_rus import student_eng_rus_kb
 from keyboards.kb_student_rus_eng import student_rus_eng_kb
 from keyboards.kb_client_adding import client_adding_kb, client_adding_kb2
 from keyboards.kb_to_start import start_kb
+from keyboards.kb_client_teacher import client_teacher_kb, client_teacher_kb2

@@ -8,7 +8,7 @@ b4 = KeyboardButton('/Удалить_конкретное_слово')
 
 client_adding_kb = ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
 
-client_adding_kb.row(b1, b2, b3, b4)
+client_adding_kb.row(b1, b2).row(b3, b4)
 
 b1_2 = KeyboardButton('/Отмена_и_выход')
 

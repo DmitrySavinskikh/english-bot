@@ -8,7 +8,7 @@ from data_base import sqlite_db
 
 
 async def command_start(message: types.Message):
-    await bot.send_message(message.from_user.id, 'Привет, это бот по изучению английского. Следуй ниже по кнопкам', reply_markup=client_kb)
+    await bot.send_message(message.from_user.id, 'Привет, это бот по изучению английского. Следуй по кнопкам ниже', reply_markup=client_kb)
     sqlite_db.sql_start(message.from_user.id)
 
 class FSMClientDel(StatesGroup):
