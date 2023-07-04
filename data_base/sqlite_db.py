@@ -32,9 +32,6 @@ async def if_not_empty(id_user):
 
 async def sql_add_command(state):
     async with state.proxy() as data:
-        # print(data)
-        # enword = tuple(data.values())[1]
-        # print(tuple(data.values()))
         cur.execute('INSERT INTO dictionary VALUES (?, ?, ?, ?, 100)', tuple(data.values()))
         base.commit()
     
@@ -57,7 +54,6 @@ async def sql_del_prev_row():
     base.commit()
     return del_word
 
-# пробовал реализовать с подсчётом максимального кол-ва повторений
 async def sql_take_set(id_user):
     if await if_not_empty(id_user):
         res = cur.execute('''

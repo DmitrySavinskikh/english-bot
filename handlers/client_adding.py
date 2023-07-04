@@ -3,7 +3,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
 from keyboards import client_adding_kb, client_kb, client_adding_kb2
 from aiogram.dispatcher.storage import FSMContext
-from data_base.sqlite_db import sql_add_command, sql_del_prev_row, sql_delete_row, if_not_empty, max_id_word
+from data_base import sqlite_db
 
 words_this_session = []
 
@@ -19,18 +19,13 @@ class FSMClient_adding(StatesGroup):
 async def cm_start(message: types.Message):
     await FSMClient_adding.en_word.set()
     await bot.send_message(message.from_user.id, 'Напиши сообщение по следующему образцу:\n<Слово на английском>\n<Перевод>\n<Описание или "-" "_" "Без описания">', reply_markup=client_adding_kb2)
-    # await max_id_word()
 
 async def cancel_handler(message: types.Message, state: FSMContext):
-    # current_state = await state.get_state()
-    # if current_state is None:
-    #     return
     await state.finish()
     await bot.send_message(message.from_user.id, 'OK', reply_markup=client_kb)
 
 async def add_enword(message: types.Message, state: FSMContext):
     global words
-    # print(id_word)
     words = str(message.text).split('\n')
     if len(words) < 3:
         await bot.send_message(message.from_user.id, 'Неверно заполнена форма')
@@ -49,25 +44,23 @@ async def add_enword(message: types.Message, state: FSMContext):
 
     async with state.proxy() as data:
         data['description'] = words[2]
-        data['id_word'] = await max_id_word() + 1
-    await sql_add_command(state)
+        data['id_word'] = await sqlite_db.max_id_word() + 1
+    await sqlite_db.sql_add_command(state)
     await state.finish()
     words_this_session.append(enword)
     await bot.send_message(message.from_user.id, 'Слово "'+words_this_session[-1]+'" добавлено в словарь')
     await cm_start(message)
 
 async def del_prev_word(message: types.Message):
-    # print('good')
-    word = await sql_del_prev_row()
+    word = await sqlite_db.sql_del_prev_row()
     await bot.send_message(message.from_user.id, 'Слово "' + str(word) + '" удалено', reply_markup=client_adding_kb)
-    # print('good')
 
 class FSMClient_del(StatesGroup):
     enword = State()
 
 
 async def del_specific_word(message: types.Message):
-    if await if_not_empty(message.from_user.id):
+    if await sqlite_db.if_not_empty(message.from_user.id):
         await FSMClient_del.enword.set()
         await message.reply('Введи слово на английском, чтобы удалить его')
     else:
@@ -78,7 +71,7 @@ async def del_specific_finish(message: types.Message, state: FSMContext):
         words = message.text
         words = words[0].upper() + words[1:].lower()
         data['enword'] = words
-    await sql_delete_row(state)
+    await sqlite_db.sql_delete_row(state)
     await state.finish()
     await bot.send_message(message.from_user.id, 'Слово удалено', reply_markup=client_adding_kb)
 

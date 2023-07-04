@@ -2,8 +2,6 @@ from aiogram.dispatcher import Dispatcher
 from create_bot import bot
 from keyboards import student_kb
 from aiogram import types
-from aiogram.dispatcher.filters.state import State, StatesGroup
-from aiogram.dispatcher.storage import FSMContext
 from data_base import sqlite_db
 
 

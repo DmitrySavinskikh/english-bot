@@ -3,7 +3,6 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot
 from keyboards import client_kb, start_kb
 from aiogram.dispatcher.storage import FSMContext
-from data_base.sqlite_db import sql_delete_row
 from data_base import sqlite_db
 
 
@@ -28,7 +27,7 @@ async def cancel_handler(message: types.Message, state: FSMContext):
 async def finish_del_word(message: types.Message, state: FSMContext):
     async with state.proxy() as data:
         data['delword'] = message.text 
-    await sql_delete_row(state)
+    await sqlite_db.sql_delete_row(state)
     await state.finish()
     await bot.send_message(message.from_user.id, 'Слово удалено', reply_markup=client_kb)
 
